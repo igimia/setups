@@ -1,7 +1,38 @@
 ---
 - name: set a timezone (Asia/Tokyo)
-  time
+  timezone:
+    name: Asia/Tokyo
 
+- name: upgrade all packages
+  yum: 
+    name: '*'
+    state: latest
 
+- name: install necessary packages
+  yum:
+    name: {{ item }}
+    state: installed
+  with_items:
+    - git
+    - zlib-devel
+    - bzip2
+    - bzip2-devel
+    - readline-devel
+    - sqlite
+    - sqlite-devel
+    - openssl-devel
 
+- name: gitclone pyenv to use python3~
+  git:
+    clone: yes
+    dest: /home/ec2-user/.pyenv
+    repo: git://github.com/yyuu/pyenv.git 
+
+- name: bashrc file copy
+  copy:
+    src: files/bashrc
+    dest: ~/.bashrc
+
+- name: source bashrc
+  command: source ~/.bashrc
 
